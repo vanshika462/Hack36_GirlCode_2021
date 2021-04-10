@@ -73,7 +73,7 @@ void payment()
 int main()      // make sure to go back to payment portal if check=1
 {
     int a,check=0;
-    cout<<"Choose your method of payment.";
+    cout<<"Choose your method of payment.\n";
     cout<<"Enter 1 for cash\n";
     cout<<"Enter 2 for card\n";
     cin>>a;
@@ -85,7 +85,7 @@ int main()      // make sure to go back to payment portal if check=1
         case 2: payment();
                 check=0;
         break;
-        default: cout<<"Please enter a valid option";
+        default: cout<<"Please enter a valid option\n";
                 check=1;
         break;
     }
