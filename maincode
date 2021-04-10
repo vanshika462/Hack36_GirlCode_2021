@@ -1,0 +1,255 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+struct client
+{
+	char name[35], username[25], password[25], email[40];
+};
+
+client cl;
+
+struct server
+{
+	char name[35], username[25], password[25], job[25];
+};
+
+server s;
+
+
+void clientfile()
+{
+	ofstream fout;
+	fout.open("client.dat",ios::out|ios::app|ios::binary);
+	if(!fout)
+	{
+		cout<<"Couldn't open the file";
+		exit(0);
+	}
+	cl.clregister();
+	fout.write((char*)&cl,sizeof(cl));
+	fout.close();
+}
+
+
+
+void serverfile()
+{
+	ofstream fout;
+	fout.open("server.dat",ios::out|ios::app|ios::binary);
+	if(!fout)
+	{
+		cout<<"Couldn't open the file";
+		exit(0);
+	}
+	s.serverreg();
+	fout.write((char*)&s,sizeof(s));
+	fout.close();
+}
+
+
+char* getusername(ch)
+{	switch(ch)
+	{
+		case 1: client c1;
+			ifstream fin;
+			fin.open("client.dat",ios::in|ios::binary);
+			if(!fin)
+			{
+				cout<<"Couldn't open the file";
+				exit(0);
+			}
+			while(!fin.eof())
+			{
+				fin.read((char*)&c1, sizeof(c1));
+				return c1.username;
+			}
+		
+		case 2: server s1;
+			ifstream fin;
+			fin.open("server.dat",ios::in|ios::binary);
+			if(!fin)
+			{
+				cout<<"Couldn't open the file";
+				exit(0);
+			}
+			while(!fin.eof())
+			{
+				fin.read((char*)&s, sizeof(s));
+				return s1.username;
+			}
+	}
+}
+
+		
+void clregister()
+{
+	do
+	{	cout<<"\n Enter name:";
+		cin>>cl.name;
+		cout<<"\n Enter username: ";
+		cin>>cl.username;
+		cout<<"\n Enter password: ";
+		cin>>cl.password;
+		cout<<"\n Enter email ID: ";
+		cin>>cl.email;
+		char verify[25]=getusername(1);
+		int v=0;
+		if(cl.username==verify)
+		{
+			cout<<"\n An account with this username exists already. Try again with another username"; 
+			v=1;
+		}
+	}
+	while(v=1);
+}
+
+void serverreg()
+{
+	do
+	{	cout<<"\n Enter name:";
+		cin>>s.name;
+		cout<<"\n Enter username: ";
+		cin>>s.username;
+		cout<<"\n Enter password: ";
+		cin>>s.password;
+		cout<<"\n Enter job: ";
+		cin>>s.job;
+		char verify[25]=getusername(2);
+		int v=0;
+		if(s.username==verify)
+		{
+			cout<<"\n An account with this username exists already. Try again with another username"; 
+			v=1;
+		}
+	}
+	while(v=1);
+}
+
+	
+struct date
+{
+	int dd, mm, yyyy;
+	int hr, min; 
+};
+
+class appnt
+{
+	char client_name[25];
+	date appdate;
+	char server_name[25];
+	int conf;
+	
+	public: char service[10];
+			void getdata_cl();
+			void getdata_se();
+			int confirm();
+			void service(int);
+};
+
+void appnt::service(int ch)
+{
+	switch(ch)
+	{
+		case 1: strcpy(service,"Test");
+				break;
+		case 2: strcpy(service,"Vaccine");
+				break;
+		case 3: strcpy(service,"Sanitise");
+				break;
+		default: break;
+	}
+}	
+
+void appnt::getdata_cl()
+{	
+	cout<<"\n Client Name: ";
+	gets(client_name);
+	int ch;
+	cout<<"\n 1. Book Covid-19 test."
+		<<"\n 2. Book Covid-19 vaccine."
+		<<"\n 3. Sanitise your home."
+		<<"\n Choose service: ";
+	cin>>ch;
+	service(ch);
+}
+
+void appnt::getdata_se()
+{
+	cout<<"\n Enter Name: ";
+	gets(server_name);
+}
+
+int appnt::confirm()
+{
+	char c;
+	cout<<"\n Confirm booking? [Y/N] ";
+	cin>>c;
+	if(c=='y' || c=='Y')
+		return 1;
+	else
+		return 0;
+}
+
+
+
+int as_menu()
+{
+	int ch;
+	cout<<"\n 1. Enter as client"
+		<<"\n 2. Enter as server"
+		<<"\n 3. Enter as admin"
+		<<"\n Enter your choice: ";
+	cin>>ch;
+	return ch;
+}
+
+int ch;
+ch=as_menu();
+
+
+
+
+void client_page()
+{
+	int choice;
+	cout<<"\n Enter 1 to register";
+	cout<<"\n Existing user? Enter 2 to login";
+	cin>>choice;
+	switch(choice)
+	{
+		case 1: cl.clregister();
+		case 2: 
+
+
+
+			
+}
+
+
+void server_page()
+{
+	int choice;
+	cout<<"\n Enter 1 to register";
+	cout<<"\n Existing user? Enter 2 to login";
+	
+
+
+
+
+int main()
+{
+	cout<<"\n\t\t <SITE NAME> "
+		<<"\n\t\t <ACTIONS> ";
+	
+	switch(ch)
+	{
+		case 1: client_page();
+				break;
+		case 2: server_page();
+				break;
+		case 3: admin_page();
+				break;
+		default: break;
+	}
+	return 0;
+}
