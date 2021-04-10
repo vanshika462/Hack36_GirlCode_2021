@@ -1,131 +1,6 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-struct client
-{
-	char name[35], username[25], password[25], email[40];
-};
-
-client cl;
-
-struct server
-{
-	char name[35], username[25], password[25], job[25];
-};
-
-server s;
-
-
-void clientfile()
-{
-	ofstream fout;
-	fout.open("client.dat",ios::out|ios::app|ios::binary);
-	if(!fout)
-	{
-		cout<<"Couldn't open the file";
-		exit(0);
-	}
-	cl.clregister();
-	fout.write((char*)&cl,sizeof(cl));
-	fout.close();
-}
-
-
-
-void serverfile()
-{
-	ofstream fout;
-	fout.open("server.dat",ios::out|ios::app|ios::binary);
-	if(!fout)
-	{
-		cout<<"Couldn't open the file";
-		exit(0);
-	}
-	s.serverreg();
-	fout.write((char*)&s,sizeof(s));
-	fout.close();
-}
-
-
-char* getusername(ch)
-{	switch(ch)
-	{
-		case 1: client c1;
-			ifstream fin;
-			fin.open("client.dat",ios::in|ios::binary);
-			if(!fin)
-			{
-				cout<<"Couldn't open the file";
-				exit(0);
-			}
-			while(!fin.eof())
-			{
-				fin.read((char*)&c1, sizeof(c1));
-				return c1.username;
-			}
-		
-		case 2: server s1;
-			ifstream fin;
-			fin.open("server.dat",ios::in|ios::binary);
-			if(!fin)
-			{
-				cout<<"Couldn't open the file";
-				exit(0);
-			}
-			while(!fin.eof())
-			{
-				fin.read((char*)&s, sizeof(s));
-				return s1.username;
-			}
-	}
-}
-
-		
-void clregister()
-{
-	do
-	{	cout<<"\n Enter name:";
-		cin>>cl.name;
-		cout<<"\n Enter username: ";
-		cin>>cl.username;
-		cout<<"\n Enter password: ";
-		cin>>cl.password;
-		cout<<"\n Enter email ID: ";
-		cin>>cl.email;
-		char verify[25]=getusername(1);
-		int v=0;
-		if(cl.username==verify)
-		{
-			cout<<"\n An account with this username exists already. Try again with another username"; 
-			v=1;
-		}
-	}
-	while(v=1);
-}
-
-void serverreg()
-{
-	do
-	{	cout<<"\n Enter name:";
-		cin>>s.name;
-		cout<<"\n Enter username: ";
-		cin>>s.username;
-		cout<<"\n Enter password: ";
-		cin>>s.password;
-		cout<<"\n Enter job: ";
-		cin>>s.job;
-		char verify[25]=getusername(2);
-		int v=0;
-		if(s.username==verify)
-		{
-			cout<<"\n An account with this username exists already. Try again with another username"; 
-			v=1;
-		}
-	}
-	while(v=1);
-}
-
-	
 struct date
 {
 	int dd, mm, yyyy;
@@ -146,189 +21,146 @@ class appnt
 			void service(int);
 };
 
-void appnt::service(int ch)
-{
-	switch(ch)
-	{
-		case 1: strcpy(service,"Test");
-				break;
-		case 2: strcpy(service,"Vaccine");
-				break;
-		case 3: strcpy(service,"Sanitise");
-				break;
-		default: break;
-	}
-}	
 
-void appnt::getdata_cl()
-{	
-	cout<<"\n Client Name: ";
-	gets(client_name);
-	int ch;
-	cout<<"\n 1. Book Covid-19 test."
-		<<"\n 2. Book Covid-19 vaccine."
-		<<"\n 3. Sanitise your home."
-		<<"\n Choose service: ";
-	cin>>ch;
-	service(ch);
+class client        
+{
+  private:
+      string username;
+      string client_name;
+      string password;
+  public:
+      void getdata(string uname);
+      void showdata();
+      int login(string uname,string pass);
+      string return_username();
+      int search(string nm);
+};
+client cl;
+
+void client::getdata(string uname)
+{
+    cout<<"\n Enter name: ";
+	cin>>cl.client_name;
+	cout<<"\n Enter password: ";
+    cin>>cl.password;
+    cl.username=uname;
 }
 
-void appnt::getdata_se()
+void client::showdata()
 {
-	cout<<"\n Enter Name: ";
-	gets(server_name);
+    cout<<"show client details";
 }
 
-int appnt::confirm()
+string client::return_username()
 {
-	char c;
-	cout<<"\n Confirm booking? [Y/N] ";
-	cin>>c;
-	if(c=='y' || c=='Y')
-		return 1;
-	else
-		return 0;
+  return cl.username;
+}
+
+int client::login(string uname,string pass)     //for existing client login
+{
+    client c;
+    fstream f;
+    f.open("Client.dat",ios::in||ios::binary);     //ERROR HERE, +2 overloads on open
+    if(!f)
+    {
+        cout<<"\n file could not be opened";
+        exit(0); 
+    }
+    while(!f.eof())
+    {
+        f.read((char*)&c,sizeof(c));
+        if(c.return_username()==uname)
+        {
+            if(c.password==pass)
+            {
+                cout<<"\nWelcome!\n";
+            }
+            return 0;
+            //client_options();
+        }
+        else
+        {
+            cout<<"\nInvalid login or password!\n";
+            return 1;
+        }
+    }
+    f.close();
+}
+int client::search(string nm)   //for new client registration
+{
+    client c;
+    fstream fin;
+    fin.open("Client.dat",ios::in|ios::out|ios::binary|ios::app);
+    while(!fin.eof())
+    {
+        fin.read((char*)&c,sizeof(c));
+        if(c.return_username()==nm)
+        {
+            cout<<"Username already exists!\n";
+            return 1;
+            break;
+        }
+        else
+        {
+            c.getdata(nm);
+            fin.write((char*)&c,sizeof(c));
+            break;
+        }
+    }
+    fin.close();
+}
+
+void client_options()       //after client logs in
+{
+    int b;
+    cout<<"\n1. Book an appointment\n";
+    cout<<"2. View your appointments\n";
+    cout<<"3. Cancel appointment\n";
+    cin>>b;
+    switch(b)
+    {
+        case 1: //book();
+                break;
+        case 2: //view();
+                break;
+        case 3: //cancel();
+                break;
+        default:cout<<"Please enter a valid option!";
+    }
 }
 
 
-
-void claccept()
-{ 
-
-  appnt c;
-
-  fstream fin;
-
-  fin.open("client.dat",ios::in||ios::binary);
-  if(!fin)
- {
-   cout<<"\n file could not be opened";
-   exit(0); 
- }
-  
-  while(fin.read((char*)&c,size of c()))
+void clregaccept()    //client registration
 {
-   c.getdata_cl();
-   break;
-}
-
-
-void clregaccept()
-{
-  
-  client cl;
-  appnt c;
-  int t=0;
-  char uname[25];
-  
-  fstream fin, fout;
-  fin.open("client.dat",ios::in||ios::binary);
-  fout.open("client.dat",ios::out||ios::binary);
-  
-  if(!fin)
-{
-  cout<<"\n file can not be opened";
-  exit(0);
-}
-
-  cout<<"\n Enter your username:";
-  gets(uname);
-
- while(fin.read((char*)&cl,size of cl()))
-{ 
- if(uname!=c.client_name())
- {
-   fout.write(char*)&cl,size of cl());
- }
- 
- else
- {
-  cout<<"\n Username already exists. Try again";
-  t=1;
- }
-}
-fin.close();
-fout.close();
-}
-
-  
-void seaceept()
-{
-  
-  appnt s;
-  
-  fstream fin;
-  
-  fin.open("server.dat",ios::in||ios binary);
-  if(!fin)
+  string uname;
+  int t;
+  do
   {
-    cout<<"\n file could not be opened";
-    exit(0);
-  }
-    while(fin.read((char*)&s,size of s()))
-  {
-     s.service();
-     break;
-  }
- 
- 
-void seregaccept()
-{
- 
- server se;
- appnt s;
- int flag=0
- char username[25];
- 
- fstream fin, fout;
- fin.open("server.dat",ios::in||ios::binary);
- fout.open("server.dat",ios::out||ios::binary);
- 
- if(!fin)
- {
- cout<<"\n file can not be opened";
- exit(0);
- }
- 
- cout<<"\n Enter your username:";
- gets(usname);
-
- while(fin.read((char*)&se,size of se()))
-{
- if(usname!=s.server_name())
- {
-   fout.write(char*)&se,size of se());
- }
- 
-else
- {
-  cout<<"\n Username already exists. Try again";
-  flag=1;
- }
+        t=0;
+        cout<<"\nEnter username: ";
+        cin>>uname;
+        t=cl.search(uname);
+  }while(t==1);
 }
-fin.close();
-fout.close();
+
+void claccept()     //client login
+{ 
+    int t;
+    string uname;
+    string pass;  
+    do
+    {
+        t=0;
+        cout<<"\nEnter username: ";
+        cin>>uname;
+        cout<<"\nEnter password: ";
+        t=cl.login(uname,pass);
+    }while(t==1);
 }
 
 
-int as_menu()
-{
-	int ch;
-	cout<<"\n 1. Enter as client"
-		<<"\n 2. Enter as server"
-		<<"\n 3. Enter as admin"
-		<<"\n Enter your choice: ";
-	cin>>ch;
-	return ch;
-}
 
-int ch;
-ch=as_menu();
-
-
-
-
-void client_page()
+void client_page()  //if user chooses client
 {
 	int choice;
 	cout<<"\n Enter 1 to register";
@@ -336,39 +168,36 @@ void client_page()
 	cin>>choice;
 	switch(choice)
 	{
-		case 1: cl.clregister();
-		case 2: 
-
-
-
-			
+		case 1: clregaccept();
+            break;
+		case 2: claccept();
+            break;
+        default:
+            cout<<"Enter valid choice!";
+            break;
+        }		
 }
-
-
-void server_page()
-{
-	int choice;
-	cout<<"\n Enter 1 to register";
-	cout<<"\n Existing user? Enter 2 to login";
-	
-
-
 
 
 int main()
 {
-	cout<<"\n\t\t <SITE NAME> "
-		<<"\n\t\t <ACTIONS> ";
-	
-	switch(ch)
+	cout<<"\n\t\t <SITE NAME>";
+	cout<<"\n\t\t 1. Client\n";
+    cout<<"\n\t\t 2. Server\n";
+    cout<<"\n\t\t 3. Admin\n";
+	int a;
+    cin>>a;
+	switch(a)
 	{
 		case 1: client_page();
 				break;
-		case 2: server_page();
+		case 2: //server_page();
 				break;
-		case 3: admin_page();
+		case 3: //admin_page();
 				break;
-		default: break;
+		default:
+      cout<<"Enter valid option!";
+      break;
 	}
 	return 0;
 }
