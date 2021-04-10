@@ -13,13 +13,13 @@ bool isNumberString(const string& cc) {
 void site(string c)
 {
     cout<<"Issuing Network is ";
-    if(c[0]==4)
+    if(c.front()==4)
     cout<<"Visa Card\n";
-    else if(c[0]==5) 
+    else if(c.front()==5) 
     cout<<"Mastercard\n";
-    else if(c[0]==3 && (c[1]==3 || c[1]==7))
+    else if(c.front()==3 && (c.at(1)==3 || c.at(1)==7))
     cout<<"American Express\n";
-    else if(c[0]==6)
+    else if(c.front()==6)
     cout<<"Discover\n";
     else
     cout<<"not identified\n";
