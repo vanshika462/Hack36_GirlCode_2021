@@ -233,7 +233,130 @@ int appnt::confirm()
 }
 
 
+
 void appnt::getapt()
+=======
+
+void claccept()
+{ 
+
+  appnt c;
+
+  fstream fin;
+
+  fin.open("client.dat",ios::in||ios::binary);
+  if(!fin)
+ {
+   cout<<"\n file could not be opened";
+   exit(0); 
+ }
+  
+  while(fin.read((char*)&c,size of c()))
+{
+   c.getdata_cl();
+   break;
+}
+
+
+void clregaccept()
+{
+  
+  client cl;
+  appnt c;
+  int t=0;
+  char uname[25];
+  
+  fstream fin, fout;
+  fin.open("client.dat",ios::in||ios::binary);
+  fout.open("client.dat",ios::out||ios::binary);
+  
+  if(!fin)
+{
+  cout<<"\n file can not be opened";
+  exit(0);
+}
+
+  cout<<"\n Enter your username:";
+  gets(uname);
+
+ while(fin.read((char*)&cl,size of cl()))
+{ 
+ if(uname!=c.client_name())
+ {
+   fout.write(char*)&cl,size of cl());
+ }
+ 
+ else
+ {
+  cout<<"\n Username already exists. Try again";
+  t=1;
+ }
+}
+fin.close();
+fout.close();
+}
+
+  
+void seaceept()
+{
+  
+  appnt s;
+  
+  fstream fin;
+  
+  fin.open("server.dat",ios::in||ios binary);
+  if(!fin)
+  {
+    cout<<"\n file could not be opened";
+    exit(0);
+  }
+    while(fin.read((char*)&s,size of s()))
+  {
+     s.service();
+     break;
+  }
+ 
+ 
+void seregaccept()
+{
+ 
+ server se;
+ appnt s;
+ int flag=0
+ char username[25];
+ 
+ fstream fin, fout;
+ fin.open("server.dat",ios::in||ios::binary);
+ fout.open("server.dat",ios::out||ios::binary);
+ 
+ if(!fin)
+ {
+ cout<<"\n file can not be opened";
+ exit(0);
+ }
+ 
+ cout<<"\n Enter your username:";
+ gets(usname);
+
+ while(fin.read((char*)&se,size of se()))
+{
+ if(usname!=s.server_name())
+ {
+   fout.write(char*)&se,size of se());
+ }
+ 
+else
+ {
+  cout<<"\n Username already exists. Try again";
+  flag=1;
+ }
+}
+fin.close();
+fout.close();
+}
+
+
+
 {
 	aptcode();
 	cout<<"\n Appointment Code: "<<code;
