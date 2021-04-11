@@ -215,6 +215,16 @@ class appnt
 		}
 };
 
+void appnt::showapply()
+{
+    if(strcmp(status,"CLOSE")==0)
+    {
+        cout<<"\n Details of the server are shown: ";
+        cout<<"\nServer Code: "<<scode;
+        cout<<"\nServer Name: "<<server_name;
+    }
+}
+
 void appnt::serdef(int ch)
 {
 	switch(ch)
@@ -536,6 +546,7 @@ int apply_apt()
 				if(j.code==jcode)
 				{
 					k=j.confirm();
+                    strcpy(j.status,"CLOSE");
 					cout<<"\n Applied.";
 				}
 			}
@@ -1078,11 +1089,6 @@ void searchapt()
 }
 
 
-void appnt::showapply()
-{
-	cout<<"\n Details of the server are shown: ";
-
-}
 
 //********************************************************************
 //------------------------ADMIN USERNAME & PASSWORD-------------------
