@@ -190,6 +190,7 @@ class appnt
 			void getdata_cl();
 			void getdata_se();
 			int confirm();
+            int price;
 			void serdef(int);
 		int code;
         int scode;
@@ -220,11 +221,14 @@ void appnt::serdef(int ch)
 	{
 		case 1: strcpy(service,"Test");
                 med=1;
+                price=250;
 				break;
 		case 2: strcpy(service,"Vaccine");
                 med=1;
+                price=1500;
 				break;
 		case 3: strcpy(service,"Sanitise");
+                price=3000;
                 med=0;
 				break;
 		default: break;
@@ -282,10 +286,10 @@ void appnt::getapt()
 
 void appnt::showapt()
 {
-    cout<<code<<"\n";
-    cout<<service<<"\n";
-    cout<<client_name<<"\n";
-    cout<<server_name<<"\n";
+    cout<<"Appointment Code: "<<code<<"\n";
+    cout<<"Service: "<<service<<"\n";
+    cout<<"Client Name: "<<client_name<<"\n";
+    cout<<"Server Name: "<<server_name<<"\n";
 }
 
 void ser_register()
@@ -747,6 +751,97 @@ void checkser()
 	fin.close();
 }
 
+bool isNumberString(const string& cc) {
+    int len = cc.length();
+    for (int i = 0; i < len; i++) {
+        if (cc[i] < '0' || cc[i] > '9')
+            return false;
+    }
+    return true;
+}
+void site(string c)
+{
+    cout<<"Issuing Network is ";
+    if(c.front()=='4')
+    cout<<"Visa Card\n";
+    else if(c.front()=='5') 
+    cout<<"Mastercard\n";
+    else if(c.front()=='3' && (c.at(1)=='4' || c.at(1)=='7'))
+    cout<<"American Express\n";
+    else if(c.front()=='6')
+    cout<<"Discover\n";
+    else
+    cout<<"not identified\n";
+    
+}
+void payment()
+{
+    string ccNumber;
+    while (true) 
+    {
+        cout <<"You can enter 'exit' anytime to quit." << endl;
+        cout<<"Enter your credit card number ";
+        cin >> ccNumber;
+        if (ccNumber == "exit")
+            break;
+        else if (!isNumberString(ccNumber)) 
+        {
+            cout << "Bad input! ";
+            continue;
+        }
+    
+        int len = ccNumber.length();
+        int doubleEvenSum = 0;
+        for (int i = len - 2; i >= 0; i = i - 2) 
+        {
+            int dbl = ((ccNumber[i] - 48) * 2);
+            if (dbl > 9) 
+            {
+                dbl = (dbl / 10) + (dbl % 10);
+            }
+            doubleEvenSum += dbl;
+        }
+        for (int i = len - 1; i >= 0; i = i - 2) 
+        {
+            doubleEvenSum += (ccNumber[i] - 48);
+        }
+        if(doubleEvenSum % 10 == 0)
+        {
+            cout <<"Valid!";
+            site(ccNumber);
+            break;
+        }
+        else
+        {
+            cout<<"Invalid!" << endl;
+            continue;
+        }
+    }
+        
+}
+void pay(int p)     
+{
+    int a,check=0;
+    do{
+    cout<<"Choose your method of payment.\n";
+    cout<<"Enter 1 for cash\n";
+    cout<<"Enter 2 for card\n";
+    cin>>a;
+    switch(a)
+    {
+        case 1: cout<<"Your amount is: "<<p;
+                cout<<"\n\nThank you for your order!\n\n";
+        break;
+        case 2: cout<<"Your amount is: "<<p;
+                payment();
+                check=0;
+        break;
+        default: cout<<"Please enter a valid option\n";
+                check=1;
+        break;
+    }
+    }while(check==1);
+}
 void addapts()
 {
 	appnt a;
@@ -759,6 +854,7 @@ void addapts()
 	a.getapt();
 	fout.write((char*)&a,sizeof(a));
 	fout.close();
+    pay(a.price);
 }
 
 //--------------------------------------------------------------------
